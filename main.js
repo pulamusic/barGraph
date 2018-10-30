@@ -45,7 +45,7 @@ $.getJSON(url, function(data) {
 
   let barWidth = (width - margin.left) / chartObj.length
 
-  let json = d3.select("pre").text(JSON.stringify(chartObj, undefined, 4))
+  // let json = d3.select("pre").text(JSON.stringify(chartObj, undefined, 4))
 
   let x = d3.scaleTime()
     .domain([startDate, endDate])
@@ -88,6 +88,12 @@ $.getJSON(url, function(data) {
     return item[0].substring(0, 4) + ' ' + quarter
   })
 
+  // let year = years.map(function() {
+  //   for (let i = 0; i < years.length; i++) {
+  //     return years[i]
+  //   }
+  // })
+
   // create chart bars
   let bar = chart.selectAll("g")
     .data(chartObj)
@@ -117,17 +123,21 @@ $.getJSON(url, function(data) {
         .transition()
         .duration(100)
         .style("opacity", 0.9)
+      // tooltip
+      //   .data(chartObj)
+      //   .enter()
+      //   .append("g")
       tooltip
-        .html(function(d, i) {
-          return "<strong>Year &amp; Quarter</strong>: " + years + "<br><strong>GDP</strong>: $" + GDP
-        })
-        // .html("<strong>Year &amp; Quarter</strong>: " + years + "<br><strong>GDP</strong>: $" + GDP)
+        .html("<strong>Year &amp; Quarter</strong>: " + years + "<br><strong>GDP</strong>: $" + GDP)
         .style("left", d3.event.pageX + 20 + "px")
         .style("top", d3.event.pageY + 20 + "px")
       tooltip
-        // .attr("data-date", d[0])
-        .attr('data-date', chartData[i][0])
-        .attr('data-gdp', chartData[i][1])
+        .attr('data-date', function (d, i) {
+          return chartData[i][0];
+        })
+        .attr('data-gdp', function (d, i) {
+          return chartData[i][1];
+        })
     })
     // remove tooltip on mouseout
     .on("mouseout", function(d) {
@@ -170,5 +180,31 @@ $.getJSON(url, function(data) {
     .text("Gross Domestic Product, U.S.")
     .attr("transform", "rotate(-90)")
     .style("text-anchor", "end")
+
+
+
+
+    // let year = function() {
+    //   if (years.hasOwnProperty(key)) {
+    //     return years[key]
+    //   }
+    // }
+
+    // console.log(year)
+
+    // for (let key in years) {
+    //   if (years.hasOwnProperty(key)) {
+    //       console.log(key + " -> " + years[key])
+    //   }
+    // }
+    // console.log(year)
+
+    // console.log(years[0])
+
+
+      // for (let i = 0; i < years.length; i++) {
+      //   console.log(years[i])
+      // }
+
 
 }) // end of $.getJSON

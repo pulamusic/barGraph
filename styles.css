@@ -47,34 +47,6 @@ body {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* .tips:before {
-  content: "";
-  position: absolute;
-  bottom: -20px;
-  left: 82px;
-  border-width: 20px 20px 0;
-  border-style: solid;
-  border-color: #000 transparent;
-  display: block;
-  width: 0;
-}
-
-.tips:after {
-  content: "";
-  position: absolute;
-  bottom: -19px;
-  left: 82px;
-  border-width: 20px 20px 0;
-  border-style: solid;
-  border-color: #93afd2 transparent;
-  display: block;
-  width: 0;
-} */
-
-/* .hidden {
-  display: none;
-} */
-
 footer p {
   margin-top: 50px;
   text-align: center;
