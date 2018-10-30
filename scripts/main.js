@@ -29,10 +29,10 @@ $.getJSON(url, function(data) {
     left: 50
   }
 
-  let tooltip = d3.select(".tooltip")
-    .attr("id", "tooltip")
-    .attr("class", "tips")
-    .style("opacity", 0)
+  // let tooltip = d3.select(".tooltip")
+  //   .attr("id", "tooltip")
+  //   .attr("class", "tips")
+  //   .style("opacity", 0)
 
   let overlay = d3.select('.tooltip')
     .append('div')
@@ -81,6 +81,7 @@ $.getJSON(url, function(data) {
       return "translate(" + (chartObj.indexOf(d) * barWidth) + ", " + difference + ")"
     })
     .append("rect")
+    .attr("fill", "#847043")
     .attr("class", "bar")
     .attr("width", barWidth)
     .attr("height", function(d) {
@@ -92,6 +93,10 @@ $.getJSON(url, function(data) {
     .attr('data-gdp', function (d, i) {
       return data.data[i][1];
     })
+
+    .append("title")
+    .text(d => d)
+
     .on("mouseover", function(d) {
       let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       let month = months[+d.date.slice(5, 7)]
@@ -104,17 +109,17 @@ $.getJSON(url, function(data) {
       //   .attr("id", "tooltip")
       //   .attr('data-date', data.data[i][0])
 
-      tooltip.transition()
-        .duration(200)
-        .style("opacity", 0.9)
-      tooltip.html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
-        .attr("data-date", data.data[i][0])
-        .style('left', i * barWidth + 30 + 'px')
-        .style('top', height - 100 + 'px')
-        .style('transform', 'translateX(60px)')
-
-      d3.select("#dollars").text("$" + d.GDP + " Billion")
-      d3.select("#quarter").text(d.date.slice(0, 4) + " - " + month)
+      // tooltip.transition()
+      //   .duration(200)
+      //   .style("opacity", 0.9)
+      // tooltip.html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
+      //   .attr("data-date", data.data[i][0])
+      //   .style('left', i * barWidth + 30 + 'px')
+      //   .style('top', height - 100 + 'px')
+      //   .style('transform', 'translateX(60px)')
+      //
+      // d3.select("#dollars").text("$" + d.GDP + " Billion")
+      // d3.select("#quarter").text(d.date.slice(0, 4) + " - " + month)
     })
     .on("mouseout", function(d) {
       tooltip.transition()
@@ -127,6 +132,7 @@ $.getJSON(url, function(data) {
       //   .attr("opacity", 0)
     })
 
+  // chart header
   chart.append("g")
     .append("text")
     .attr("font-size", "30")
@@ -135,6 +141,7 @@ $.getJSON(url, function(data) {
     .attr("transform", "translate(" + (width / 3 - margin.left) + ", 15)")
     .text("U.S. Gross Domestic Product (in $Billion)")
 
+  // source info
   chart.append("g")
     .append("text")
     .attr("font-size", "12")
