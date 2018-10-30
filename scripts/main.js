@@ -1,7 +1,5 @@
 const url = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json"
 
-// ***********************JSON CALL**********************
-
 $.getJSON(url, function(data) {
   let chartData = data.data
 
@@ -13,6 +11,10 @@ $.getJSON(url, function(data) {
     obj.GDP = record[1]
     return obj
   })
+
+  let GDP = chartObj.GDP
+
+  let date = chartObj.date
 
   let startDate = new Date(chartObj[0].date)
 
@@ -67,12 +69,23 @@ $.getJSON(url, function(data) {
     .append("g")
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
 
-  let date = data.data.map(function(item) {
-    return item[0]
-  })
+  let years = chartData.map(function(item) {
+    let quarter
+    let temp = item[0].substring(5, 7)
 
-  let GDP = data.data.map(function(item) {
-    return item[1]
+    if (temp === '01') {
+      quarter = 'Q1'
+    } else
+    if (temp === '04') {
+      quarter = 'Q2'
+    } else
+    if (temp === '07') {
+      quarter = 'Q3'
+    } else
+    if (temp === '10') {
+      quarter = 'Q4'
+    }
+    return item[0].substring(0, 4) + ' ' + quarter
   })
 
   // create chart bars
@@ -93,10 +106,10 @@ $.getJSON(url, function(data) {
       return d.GDP / 30
     })
     .attr('data-date', function (d, i) {
-      return data.data[i][0];
+      return chartData[i][0];
     })
     .attr('data-gdp', function (d, i) {
-      return data.data[i][1];
+      return chartData[i][1];
     })
     // add tooltip on mouseover
     .on("mouseover", function(data) {
@@ -105,12 +118,10 @@ $.getJSON(url, function(data) {
         .duration(100)
         .style("opacity", 0.9)
       tooltip
-        // .html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
-
-        // .html("Testing: ", + chartData[0])
-
-        .html("Date: " + date + "<br>GDP: $" + GDP)
-
+        .html(function(d, i) {
+          return "<strong>Year &amp; Quarter</strong>: " + years + "<br><strong>GDP</strong>: $" + GDP
+        })
+        // .html("<strong>Year &amp; Quarter</strong>: " + years + "<br><strong>GDP</strong>: $" + GDP)
         .style("left", d3.event.pageX + 20 + "px")
         .style("top", d3.event.pageY + 20 + "px")
       tooltip
@@ -135,27 +146,29 @@ $.getJSON(url, function(data) {
     .attr("transform", "translate(" + (width / 3 - margin.left) + ", 15)")
     .text("U.S. Gross Domestic Product (in $Billions)")
 
-  // // source info
-  // chart.append("g")
-  //   .append("text")
-  //   .attr("font-size", "12")
-  //   .attr("text-align", "center")
-  //   .attr("transform", "translate(0, " + scaleMax + ")")
-  //   .text(source)
-
+  // X-axis scale
   chart.append("g")
     .attr("id", "x-axis")
     .attr("transform", "translate(0," + scaleMax + ")")
     .call(xAxis)
 
+  // // source info
+  // chart.append("g")
+  //   .append("text")
+  //   .attr("font-size", "12")
+  //   .attr("text-align", "right")
+  //   .attr("transform", "translate(0, " + scaleMax + ")")
+  //   .text(source)
+
+  // Y-axis scale
   chart.append("g")
     .attr("id", "y-axis")
     .call(yAxis)
-    .append("text")
-    .attr("transform", "rotate(-90)")
     .attr("y", 20)
     .attr("dy", "0.9em")
-    .style("text-anchor", "end")
+    .append("text")
     .text("Gross Domestic Product, U.S.")
+    .attr("transform", "rotate(-90)")
+    .style("text-anchor", "end")
 
 }) // end of $.getJSON
