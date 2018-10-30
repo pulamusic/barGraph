@@ -29,13 +29,14 @@ body {
   fill: #9e3a3a;
 }
 
-.tips {
-  position: relative;
+.tooltip {
+  position: absolute;
   padding: 5px;
   text-align: center;
   font-size: 0.8em;
-  max-width: 200px;
-  max-height: 100px;
+  /* max-width: 200px; */
+  /* max-height: 100px; */
+  height: auto;
   margin: 1em 0 3em 0;
   border: 1px solid #000;
   color: #000;
@@ -46,7 +47,7 @@ body {
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.tips:before {
+/* .tips:before {
   content: "";
   position: absolute;
   bottom: -20px;
@@ -68,11 +69,11 @@ body {
   border-color: #93afd2 transparent;
   display: block;
   width: 0;
-}
+} */
 
-.hidden {
+/* .hidden {
   display: none;
-}
+} */
 
 footer p {
   margin-top: 50px;

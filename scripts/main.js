@@ -29,15 +29,11 @@ $.getJSON(url, function(data) {
     left: 50
   }
 
-  // let tooltip = d3.select(".tooltip")
-  //   .attr("id", "tooltip")
-  //   .attr("class", "tips")
-  //   .style("opacity", 0)
-
-  let overlay = d3.select('.tooltip')
-    .append('div')
-    .attr('class', 'overlay')
-    .style('opacity', 0)
+  let tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .attr("id", "tooltip")
+    .style("opacity", 0)
 
   let scaleMax = Math.floor(max / 30)
 
@@ -71,6 +67,15 @@ $.getJSON(url, function(data) {
     .append("g")
     .attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
 
+  let date = data.data.map(function(item) {
+    return item[0]
+  })
+
+  let GDP = data.data.map(function(item) {
+    return item[1]
+  })
+
+  // create chart bars
   let bar = chart.selectAll("g")
     .data(chartObj)
     .enter()
@@ -93,43 +98,32 @@ $.getJSON(url, function(data) {
     .attr('data-gdp', function (d, i) {
       return data.data[i][1];
     })
+    // add tooltip on mouseover
+    .on("mouseover", function(data) {
+      tooltip
+        .transition()
+        .duration(100)
+        .style("opacity", 0.9)
+      tooltip
+        // .html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
 
-    .append("title")
-    .text(d => d)
+        // .html("Testing: ", + chartData[0])
 
-    .on("mouseover", function(d) {
-      let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      let month = months[+d.date.slice(5, 7)]
-      let xPosition = d3.select(this.parentNode).attr("transform", "translate(0, 50)")
-      let yPosition = event.pageY - 940
-      // let tooltip = d3.select("#tooltip")
-      //   .style("left", xPosition + "px")
-      //   .style("top", yPosition + "px")
-      //   .attr("class", "tips")
-      //   .attr("id", "tooltip")
-      //   .attr('data-date', data.data[i][0])
+        .html("Date: " + date + "<br>GDP: $" + GDP)
 
-      // tooltip.transition()
-      //   .duration(200)
-      //   .style("opacity", 0.9)
-      // tooltip.html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
-      //   .attr("data-date", data.data[i][0])
-      //   .style('left', i * barWidth + 30 + 'px')
-      //   .style('top', height - 100 + 'px')
-      //   .style('transform', 'translateX(60px)')
-      //
-      // d3.select("#dollars").text("$" + d.GDP + " Billion")
-      // d3.select("#quarter").text(d.date.slice(0, 4) + " - " + month)
+        .style("left", d3.event.pageX + 20 + "px")
+        .style("top", d3.event.pageY + 20 + "px")
+      tooltip
+        // .attr("data-date", d[0])
+        .attr('data-date', chartData[i][0])
+        .attr('data-gdp', chartData[i][1])
     })
+    // remove tooltip on mouseout
     .on("mouseout", function(d) {
-      tooltip.transition()
-        .duration(200)
-        .style('opacity', 0)
-      overlay.transition()
-        .duration(200)
-        .style('opacity', 0)
-      // d3.select("#tooltip")
-      //   .attr("opacity", 0)
+      tooltip
+        .transition()
+        .duration(400)
+        .style("opacity", 0)
     })
 
   // chart header
@@ -139,15 +133,15 @@ $.getJSON(url, function(data) {
     .attr("text-align", "center")
     .attr("class", "chartHeader")
     .attr("transform", "translate(" + (width / 3 - margin.left) + ", 15)")
-    .text("U.S. Gross Domestic Product (in $Billion)")
+    .text("U.S. Gross Domestic Product (in $Billions)")
 
-  // source info
-  chart.append("g")
-    .append("text")
-    .attr("font-size", "12")
-    .attr("text-align", "center")
-    .attr("transform", "translate(0, " + scaleMax + ")")
-    .text(source)
+  // // source info
+  // chart.append("g")
+  //   .append("text")
+  //   .attr("font-size", "12")
+  //   .attr("text-align", "center")
+  //   .attr("transform", "translate(0, " + scaleMax + ")")
+  //   .text(source)
 
   chart.append("g")
     .attr("id", "x-axis")
