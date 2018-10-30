@@ -4,6 +4,7 @@ const url = "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData
 
 $.getJSON(url, function(data) {
   let chartData = data.data
+
   let source = data.description
 
   let chartObj = chartData.map(function(record) {
@@ -14,21 +15,8 @@ $.getJSON(url, function(data) {
   })
 
   let startDate = new Date(chartObj[0].date)
-  let endDate = new Date(chartObj[chartObj.length - 1].date)
 
-  // let max = d3.max(chartObj, function(d) {
-  //     return d.GDP
-  //   }),
-  //   margin = {
-  //     top: 20,
-  //     right: 20,
-  //     bottom: 30,
-  //     left: 50
-  //   },
-  //   scaleMax = Math.floor(max / 30),
-  //   height = scaleMax + margin.bottom + margin.top,
-  //   width = (chartObj.length * 4) + margin.left + margin.right,
-  //   barWidth = (width - margin.left) / chartObj.length
+  let endDate = new Date(chartObj[chartObj.length - 1].date)
 
   let max = d3.max(chartObj, function(d) {
       return d.GDP
@@ -40,9 +28,13 @@ $.getJSON(url, function(data) {
     bottom: 30,
     left: 50
   }
+
   let scaleMax = Math.floor(max / 30)
+
   let height = scaleMax + margin.bottom + margin.top
+
   let width = (chartObj.length * 4) + margin.left + margin.right
+
   let barWidth = (width - margin.left) / chartObj.length
 
   let json = d3.select("pre").text(JSON.stringify(chartObj, undefined, 4))
@@ -93,7 +85,6 @@ $.getJSON(url, function(data) {
     .on("mouseover", function(d) {
       let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       let month = months[+d.date.slice(5, 7)]
-      // let xPosition = d3.transform(d3.select(this.parentNode).attr("transform")).translate[0] - 50
       let xPosition = d3.select(this.parentNode).attr("transform", "translate(0, 50)")
       let yPosition = event.pageY - 940
       let tooltip = d3.select("#tooltip")
@@ -102,6 +93,8 @@ $.getJSON(url, function(data) {
         .attr("class", "tips")
         .attr("id", "tooltip")
         .attr('data-date', data.data[i][0])
+
+      
 
       d3.select("#dollars").text("$" + d.GDP + " Billion")
       d3.select("#quarter").text(d.date.slice(0, 4) + " - " + month)
@@ -112,11 +105,11 @@ $.getJSON(url, function(data) {
 
   chart.append("g")
     .append("text")
-    .attr("font-size", "40")
+    .attr("font-size", "30")
     .attr("text-align", "center")
     .attr("class", "chartHeader")
     .attr("transform", "translate(" + (width / 3 - margin.left) + ", 15)")
-    .text("Gross Domestic Product (in $Billions)")
+    .text("U.S. Gross Domestic Product (in $Billion)")
 
   chart.append("g")
     .append("text")

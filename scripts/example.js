@@ -132,6 +132,7 @@ d3.json('https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/mas
     style('left', i * barWidth + 0 + 'px').
     style('top', height - d + 'px').
     style('transform', 'translateX(60px)');
+
     tooltip.transition().
     duration(200).
     style('opacity', .9);
