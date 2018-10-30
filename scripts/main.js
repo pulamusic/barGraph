@@ -29,6 +29,16 @@ $.getJSON(url, function(data) {
     left: 50
   }
 
+  let tooltip = d3.select(".tooltip")
+    .attr("id", "tooltip")
+    .attr("class", "tips")
+    .style("opacity", 0)
+
+  let overlay = d3.select('.tooltip')
+    .append('div')
+    .attr('class', 'overlay')
+    .style('opacity', 0)
+
   let scaleMax = Math.floor(max / 30)
 
   let height = scaleMax + margin.bottom + margin.top
@@ -87,20 +97,34 @@ $.getJSON(url, function(data) {
       let month = months[+d.date.slice(5, 7)]
       let xPosition = d3.select(this.parentNode).attr("transform", "translate(0, 50)")
       let yPosition = event.pageY - 940
-      let tooltip = d3.select("#tooltip")
-        .style("left", xPosition + "px")
-        .style("top", yPosition + "px")
-        .attr("class", "tips")
-        .attr("id", "tooltip")
-        .attr('data-date', data.data[i][0])
+      // let tooltip = d3.select("#tooltip")
+      //   .style("left", xPosition + "px")
+      //   .style("top", yPosition + "px")
+      //   .attr("class", "tips")
+      //   .attr("id", "tooltip")
+      //   .attr('data-date', data.data[i][0])
 
-      
+      tooltip.transition()
+        .duration(200)
+        .style("opacity", 0.9)
+      tooltip.html(years[i] + '<br>' + '$' + GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' Billion')
+        .attr("data-date", data.data[i][0])
+        .style('left', i * barWidth + 30 + 'px')
+        .style('top', height - 100 + 'px')
+        .style('transform', 'translateX(60px)')
 
       d3.select("#dollars").text("$" + d.GDP + " Billion")
       d3.select("#quarter").text(d.date.slice(0, 4) + " - " + month)
     })
-    .on("mouseout", function() {
-      d3.select("#tooltip").attr("class", "hidden")
+    .on("mouseout", function(d) {
+      tooltip.transition()
+        .duration(200)
+        .style('opacity', 0)
+      overlay.transition()
+        .duration(200)
+        .style('opacity', 0)
+      // d3.select("#tooltip")
+      //   .attr("opacity", 0)
     })
 
   chart.append("g")
